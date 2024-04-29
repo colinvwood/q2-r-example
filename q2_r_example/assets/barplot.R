@@ -1,22 +1,31 @@
 #!/usr/bin/env Rscript
 
-args <- commandArgs(trailingOnly=TRUE)
-input.table.fp <- args[1]
-visualization.fp <- args[2]
+library(tidyverse)
 
-df <- read.csv(input.table.fp)
-rownames(df) <- df[['id']]
-df <- subset(df, select=-c(id))
+read.input.csv <- function(input.table.fp) {
+    return( read_csv(input.table.fp) )
+}
 
-sample.sums <- rowSums(df)
-sample.sums <- sort(sample.sums, decreasing=TRUE)
+visualize.sorted.samples <- function(df, visualization.fp) {
+    plot <- df |>
+        rowwise() |>
+        mutate( count = sum(c_across(where(is.numeric))) ) |>
+        ungroup() |>
+        mutate(id = fct(id)) |>
+        mutate(id = fct_reorder(id, count, .desc = TRUE)) |>
+        ggplot(aes(x = id, y = count)) +
+            geom_bar(stat = "identity")
 
-svg(visualization.fp)
-barplot(
-    sample.sums,
-    main="Total Frequency per Sample",
-    xlab="Sample",
-    ylab="Total Frequency",
-    names.arg=names(sample.sums),
-)
-dev.off()
+    plot + theme(axis.text.x = element_text(angle = 90, size = 8))
+
+    ggsave(visualization.fp, device = "svg")
+}
+
+
+if (sys.nframe() == 0) {
+    args <- commandArgs(trailingOnly=TRUE)
+    input.table.fp <- args[1]
+    visualization.fp <- args[2]
+
+    visualize.sorted.samples(read.input.csv(input.table.fp), visualization.fp)
+}

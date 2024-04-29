@@ -31,10 +31,10 @@ plugin.methods.register_function(
     function=randomize_frequencies,
     inputs={'table': FeatureTable[Frequency]},
     parameters={},
-    outputs=[('summed_table', FeatureTable[Frequency])],
+    outputs=[('randomized_table', FeatureTable[Frequency])],
     input_descriptions={'table': 'The feature table in which to sum.'},
     parameter_descriptions={},
-    output_descriptions={'summed_table': 'The summed feature table.'},
+    output_descriptions={'randomized_table': 'The randomized feature table.'},
     name='Randomize feature frequencies.',
     description=(
         "Sum the features within each sample and assign this sum to each "
