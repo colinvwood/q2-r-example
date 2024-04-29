@@ -5,8 +5,6 @@
 #
 # The full license is in the file LICENSE, distributed with this software.
 # ---------------------------------------------------------------------------
-from copy import deepcopy
-
 import pandas as pd
 
 from qiime2.plugin.testing import TestPluginBase
@@ -27,7 +25,7 @@ class TestMethods(TestPluginBase):
 
     def test_randomize_frequencies(self):
         input_table = self.table.view(pd.DataFrame)
-        output_table = randomize_frequencies(deepcopy(input_table))
+        output_table = randomize_frequencies(input_table.copy())
 
         self.assertEqual(output_table.shape, input_table.shape)
         self.assertEqual(set(output_table.index), set(input_table.index))

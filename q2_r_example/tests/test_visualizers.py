@@ -28,11 +28,17 @@ class TestVisualizers(TestPluginBase):
 
     def test_plot_sorted_samples(self):
         with tempfile.TemporaryDirectory() as tempdir:
-            plot_sorted_samples(tempdir, self.table.view(pd.DataFrame))
+            input_table = self.table.view(pd.DataFrame)
+            plot_sorted_samples(tempdir, input_table.copy())
 
             files = os.listdir(tempdir)
             self.assertEqual(set(files), {'index.html', 'figure.svg'})
 
-            self.assertGreater(
-                os.path.getsize(os.path.join(tempdir, 'figure.svg')), 0
-            )
+            figure_fp = os.path.join(tempdir, 'figure.svg')
+            self.assertGreater(os.path.getsize(figure_fp), 0)
+
+            with open(figure_fp) as fh:
+                contents = fh.read()
+
+            for id in input_table.index:
+                self.assertIn(id, contents)
