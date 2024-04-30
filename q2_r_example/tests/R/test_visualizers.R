@@ -12,6 +12,7 @@ test_that('visualize sorted samples works', {
         feat2 = c(100, 3, 4)
     )
     processed.df <- visualize.sorted.samples(df, visualization.fp)
+    unlink(testdir)
 
     expect_true(is.numeric(processed.df$count))
     expect_true(is.factor(processed.df$id))
