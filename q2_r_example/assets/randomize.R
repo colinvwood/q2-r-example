@@ -20,7 +20,6 @@ randomize <- function(df) {
     return(df)
 }
 
-
 if (sys.nframe() == 0) {
     args <- commandArgs(trailingOnly=TRUE)
     input.table.fp <- args[1]
